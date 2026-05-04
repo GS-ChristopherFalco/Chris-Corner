@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chris' Corner — Sort & Filter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1F3A5F;
+  --navy-dark: #15294A;
+  --green: #2E7D5B;
+  --green-light: #E8F5E9;
+  --red-soft: #FBE9E7;
+  --red-accent: #C62828;
+  --cream: #FAF7F2;
+  --paper: #FFFFFF;
+  --ink: #2A2A2A;
+  --ink-soft: #555555;
+  --rule: #E5E0D8;
+  --shadow: 0 6px 24px rgba(31, 58, 95, 0.08);
+  --shadow-lg: 0 12px 40px rgba(31, 58, 95, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--cream);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 880px;
+  margin: 0 auto;
+  background: var(--paper);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---------------- Hero ---------------- */
+.hero {
+  background:
+    linear-gradient(135deg, rgba(31, 58, 95, 0.97), rgba(21, 41, 74, 0.98)),
+    radial-gradient(circle at 20% 80%, rgba(46, 125, 91, 0.4), transparent 50%);
+  color: white;
+  padding: 70px 60px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(46, 125, 91, 0.25), transparent 70%);
+  pointer-events: none;
+}
+
+.kicker {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.kicker::before {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  background: var(--green);
+  vertical-align: middle;
+  margin-right: 12px;
+  margin-bottom: 3px;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.hero .tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 600px;
+  position: relative;
+}
+
+.hero-meta {
+  margin-top: 36px;
+  display: flex;
+  gap: 24px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  position: relative;
+}
+
+.hero-meta span { display: flex; align-items: center; gap: 8px; }
+.hero-meta .dot { width: 4px; height: 4px; background: var(--green); border-radius: 50%; }
+
+/* ---------------- Content ---------------- */
+.content {
+  padding: 60px;
+}
+
+section { margin-bottom: 56px; }
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 32px;
+  color: var(--navy);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.section-rule {
+  width: 50px;
+  height: 3px;
+  background: var(--green);
+  margin-bottom: 22px;
+}
+
+.lead {
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  font-weight: 300;
+}
+
+p { margin-bottom: 16px; font-size: 16px; }
+
+/* ---------------- Before/After ---------------- */
+.compare-block { margin-bottom: 36px; }
+
+.compare-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.compare-sub {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.table-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.table-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  color: white;
+}
+
+.table-card.before .table-label { background: var(--red-accent); }
+.table-card.after .table-label { background: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+.table-card.before table { background: var(--red-soft); }
+.table-card.after table { background: var(--green-light); }
+
+th {
+  background: var(--navy);
+  color: white;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+}
+
+td {
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(31, 58, 95, 0.08);
+  color: var(--ink);
+}
+
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.center { text-align: center; }
+
+.takeaway {
+  background: var(--cream);
+  border-left: 3px solid var(--green);
+  padding: 16px 20px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  border-radius: 0 6px 6px 0;
+}
+
+.takeaway strong { color: var(--navy); font-weight: 600; }
+
+/* ---------------- Basics list ---------------- */
+.basics { display: grid; gap: 14px; }
+
+.basic {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.basic:last-child { border-bottom: none; }
+
+.basic-num {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: var(--green);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.basic-content h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 4px;
+  letter-spacing: 0.2px;
+}
+
+.basic-content p {
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.55;
+}
+
+kbd {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* ---------------- Callout ---------------- */
+.callout {
+  background: linear-gradient(135deg, var(--green-light) 0%, #F0F9F2 100%);
+  border-radius: 12px;
+  padding: 36px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.callout::before {
+  content: "?";
+  position: absolute;
+  top: -30px;
+  right: 20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 200px;
+  color: rgba(46, 125, 91, 0.08);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.callout-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.callout h2 {
+  font-size: 26px;
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.callout ul {
+  list-style: none;
+  position: relative;
+}
+
+.callout li {
+  padding: 10px 0 10px 28px;
+  position: relative;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  border-bottom: 1px dashed rgba(46, 125, 91, 0.2);
+}
+
+.callout li:last-child { border-bottom: none; }
+
+.callout li::before {
+  content: "✦";
+  position: absolute;
+  left: 4px;
+  top: 10px;
+  color: var(--green);
+  font-size: 13px;
+}
+
+/* ---------------- Challenges ---------------- */
+.challenges { display: grid; gap: 12px; counter-reset: ch; }
+
+.challenge {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 18px;
+  padding: 16px 20px;
+  background: var(--cream);
+  border-radius: 8px;
+  align-items: start;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.challenge:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow);
+}
+
+.challenge::before {
+  counter-increment: ch;
+  content: counter(ch, decimal-leading-zero);
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--navy);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.challenge p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+/* ---------------- Download ---------------- */
+.download {
+  margin-top: 36px;
+  text-align: center;
+  padding: 40px;
+  background: var(--navy);
+  border-radius: 12px;
+  color: white;
+}
+
+.download h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.download p {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.btn {
+  display: inline-block;
+  background: var(--green);
+  color: white;
+  text-decoration: none;
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+  background: #246447;
+  transform: translateY(-2px);
+}
+
+/* ---------------- Footer ---------------- */
+.footer {
+  padding: 30px 60px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ink-soft);
+  background: var(--cream);
+}
+
+.footer a { color: var(--green); text-decoration: none; font-weight: 500; }
+.footer a:hover { text-decoration: underline; }
+
+/* ---------------- Animations ---------------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero > * { animation: fadeUp 0.7s ease both; }
+.hero h1 { animation-delay: 0.1s; }
+.hero .tagline { animation-delay: 0.25s; }
+.hero-meta { animation-delay: 0.4s; }
+
+/* ---------------- Mobile ---------------- */
+@media (max-width: 720px) {
+  .hero { padding: 50px 28px 40px; }
+  h1 { font-size: 38px; }
+  .hero .tagline { font-size: 18px; }
+  .content { padding: 40px 28px; }
+  h2 { font-size: 26px; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .basic { grid-template-columns: 50px 1fr; gap: 14px; }
+  .basic-num { font-size: 22px; }
+  .footer { padding: 24px 28px; flex-direction: column; gap: 8px; }
+  table { font-size: 11px; }
+  th, td { padding: 6px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="kicker">Chris' Corner · Excel Tip of the Month</div>
+    <h1>Sort &amp; Filter</h1>
+    <p class="tagline">Make a messy list behave in 30 seconds.</p>
+    <div class="hero-meta">
+      <span><span class="dot"></span> 5 min read</span>
+      <span><span class="dot"></span> Beginner-friendly</span>
+      <span><span class="dot"></span> Includes practice file</span>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- WHY IT MATTERS -->
+    <section>
+      <h2>Why this matters</h2>
+      <div class="section-rule"></div>
+      <p class="lead">Most of us scroll through long spreadsheets looking for one piece of information, then scroll back up because we lost our place. Sort and Filter fix that. They're two of the most useful features in Excel, and they take about 10 seconds to learn.</p>
+    </section>
+
+    <!-- BEFORE / AFTER -->
+    <section>
+      <h2>See it in action</h2>
+      <div class="section-rule"></div>
+      <p style="color: var(--ink-soft); margin-bottom: 32px;">Same data, two different stories — see what a single click can do.</p>
+
+      <!-- Example 1 -->
+      <div class="compare-block">
+        <div class="compare-title">Example 1 — Find your biggest customers in seconds</div>
+        <div class="compare-sub">A customer order list, before and after sorting by Order Total</div>
+
+        <div class="compare-grid">
+          <div class="table-card before">
+            <div class="table-label">Before · random order</div>
+            <table>
+              <thead>
+                <tr><th>Order ID</th><th>Customer</th><th>Total</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1042</td><td>Riverside Hardware</td><td class="num">$4,250</td></tr>
+                <tr><td>1043</td><td>Coastal Foods Inc.</td><td class="num">$18,900</td></tr>
+                <tr><td>1044</td><td>Mountain Supply Co.</td><td class="num">$1,875</td></tr>
+                <tr><td>1045</td><td>Sunrise Electronics</td><td class="num">$9,420</td></tr>
+                <tr><td>1046</td><td>Prairie Trading</td><td class="num">$32,500</td></tr>
+                <tr><td>1047</td><td>Bayside Logistics</td><td class="num">$6,780</td></tr>
+                <tr><td>1048</td><td>Ironwood Mfg.</td><td class="num">$14,200</td></tr>
+                <tr><td>1049</td><td>Northstar Retail</td><td class="num">$2,950</td></tr>
+                <tr><td>1050</td><td>Desert Wholesale</td><td class="num">$27,800</td></tr>
+                <tr><td>1051</td><td>Lakeside Distributors</td><td class="num">$5,340</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-card after">
+            <div class="table-label">After · largest to smallest</div>
+            <table>
+              <thead>
+                <tr><th>Order ID</th><th>Customer</th><th>Total</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1046</td><td>Prairie Trading</td><td class="num">$32,500</td></tr>
+                <tr><td>1050</td><td>Desert Wholesale</td><td class="num">$27,800</td></tr>
+                <tr><td>1043</td><td>Coastal Foods Inc.</td><td class="num">$18,900</td></tr>
+                <tr><td>1048</td><td>Ironwood Mfg.</td><td class="num">$14,200</td></tr>
+                <tr><td>1045</td><td>Sunrise Electronics</td><td class="num">$9,420</td></tr>
+                <tr><td>1047</td><td>Bayside Logistics</td><td class="num">$6,780</td></tr>
+                <tr><td>1051</td><td>Lakeside Distributors</td><td class="num">$5,340</td></tr>
+                <tr><td>1042</td><td>Riverside Hardware</td><td class="num">$4,250</td></tr>
+                <tr><td>1049</td><td>Northstar Retail</td><td class="num">$2,950</td></tr>
+                <tr><td>1044</td><td>Mountain Supply Co.</td><td class="num">$1,875</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <strong>Takeaway:</strong> in the BEFORE table you'd have to eyeball every row to spot the $32,500 order from Prairie Trading. In the AFTER table, your top three customers are right at the top — one click on Order Total → Sort Largest to Smallest.
+        </div>
+      </div>
+
+      <!-- Example 2 -->
+      <div class="compare-block">
+        <div class="compare-title">Example 2 — See what's due next without scanning every row</div>
+        <div class="compare-sub">A project list, before and after sorting by Due Date</div>
+
+        <div class="compare-grid">
+          <div class="table-card before">
+            <div class="table-label">Before · entered in intake order</div>
+            <table>
+              <thead>
+                <tr><th>Project</th><th>Owner</th><th>Due</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Website Redesign</td><td>Sarah M.</td><td class="center">06/15/25</td></tr>
+                <tr><td>Q2 Budget Review</td><td>Marcus C.</td><td class="center">05/12/25</td></tr>
+                <tr><td>New Hire Onboarding</td><td>Priya P.</td><td class="center">05/28/25</td></tr>
+                <tr><td>Vendor Renewal</td><td>David F.</td><td class="center">07/01/25</td></tr>
+                <tr><td>Compliance Audit</td><td>Sarah M.</td><td class="center">05/20/25</td></tr>
+                <tr><td>Customer Survey</td><td>Lina A.</td><td class="center">06/30/25</td></tr>
+                <tr><td>Office Move</td><td>Marcus C.</td><td class="center">08/15/25</td></tr>
+                <tr><td>Annual Report Draft</td><td>Priya P.</td><td class="center">05/05/25</td></tr>
+                <tr><td>Software Migration</td><td>David F.</td><td class="center">06/01/25</td></tr>
+                <tr><td>Team Training</td><td>Lina A.</td><td class="center">07/22/25</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-card after">
+            <div class="table-label">After · oldest to newest</div>
+            <table>
+              <thead>
+                <tr><th>Project</th><th>Owner</th><th>Due</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Annual Report Draft</td><td>Priya P.</td><td class="center">05/05/25</td></tr>
+                <tr><td>Q2 Budget Review</td><td>Marcus C.</td><td class="center">05/12/25</td></tr>
+                <tr><td>Compliance Audit</td><td>Sarah M.</td><td class="center">05/20/25</td></tr>
+                <tr><td>New Hire Onboarding</td><td>Priya P.</td><td class="center">05/28/25</td></tr>
+                <tr><td>Software Migration</td><td>David F.</td><td class="center">06/01/25</td></tr>
+                <tr><td>Website Redesign</td><td>Sarah M.</td><td class="center">06/15/25</td></tr>
+                <tr><td>Customer Survey</td><td>Lina A.</td><td class="center">06/30/25</td></tr>
+                <tr><td>Vendor Renewal</td><td>David F.</td><td class="center">07/01/25</td></tr>
+                <tr><td>Team Training</td><td>Lina A.</td><td class="center">07/22/25</td></tr>
+                <tr><td>Office Move</td><td>Marcus C.</td><td class="center">08/15/25</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="takeaway">
+          <strong>Takeaway:</strong> dates are the trickiest column to scan visually because your eye doesn't naturally compare months and years. Sorting by Due Date instantly shows the Annual Report (5/5) is up next, not the Website Redesign that happens to sit at the top.
+        </div>
+      </div>
+    </section>
+
+    <!-- BASICS -->
+    <section>
+      <h2>The basics</h2>
+      <div class="section-rule"></div>
+
+      <div class="basics">
+        <div class="basic">
+          <div class="basic-num">i.</div>
+          <div class="basic-content">
+            <h3>Turn it on</h3>
+            <p>Click any cell in your data, then go to the <strong>Data</strong> tab and click <strong>Filter</strong>. You'll see little dropdown arrows appear on every column header.</p>
+          </div>
+        </div>
+
+        <div class="basic">
+          <div class="basic-num">ii.</div>
+          <div class="basic-content">
+            <h3>Sort</h3>
+            <p>Click the dropdown arrow on any column. Pick <em>Sort A to Z</em> (or smallest to largest for numbers) or <em>Sort Z to A</em>.</p>
+          </div>
+        </div>
+
+        <div class="basic">
+          <div class="basic-num">iii.</div>
+          <div class="basic-content">
+            <h3>Filter</h3>
+            <p>Click the dropdown, uncheck <em>Select All</em>, then check only the values you want to see. Everything else hides until you clear the filter.</p>
+          </div>
+        </div>
+
+        <div class="basic">
+          <div class="basic-num">iv.</div>
+          <div class="basic-content">
+            <h3>Search inside the filter</h3>
+            <p>Inside the filter dropdown there's a search box. Type a few letters and it narrows your options instantly. Great for long lists.</p>
+          </div>
+        </div>
+
+        <div class="basic">
+          <div class="basic-num">v.</div>
+          <div class="basic-content">
+            <h3>Clear a filter</h3>
+            <p>Click the dropdown on a filtered column and choose <em>Clear Filter From…</em>. The little funnel icon shows you which columns are filtered.</p>
+          </div>
+        </div>
+
+        <div class="basic">
+          <div class="basic-num">vi.</div>
+          <div class="basic-content">
+            <h3>Sort by multiple columns</h3>
+            <p>Data tab → <strong>Sort</strong> (the big button, not the filter dropdown). Add levels like <em>sort by Department, then by Salary</em>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DID YOU KNOW -->
+    <section>
+      <div class="callout">
+        <div class="callout-label">Did you know</div>
+        <h2>A few things that surprise people</h2>
+        <ul>
+          <li>You can filter by color if you've used cell highlighting. The dropdown has a <em>Filter by Color</em> option.</li>
+          <li>Filter dropdowns on date columns automatically group by year, then month, then day. Expand a year and check just the months you want.</li>
+          <li>Keyboard shortcut to toggle filters on and off: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>.</li>
+          <li>Sorting only sorts the rows you've selected. If you accidentally select one column instead of the whole table, you'll scramble your data. Always click a single cell inside the data first and let Excel detect the full range.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- YOUR TURN -->
+    <section>
+      <h2>Your turn</h2>
+      <div class="section-rule"></div>
+      <p style="color: var(--ink-soft); margin-bottom: 28px;">Download the practice file below. It contains a fictional company directory with 60 employees. Try these challenges, then check your work on the Answer Key tab.</p>
+
+      <div class="challenges">
+        <div class="challenge"><p>Sort the list by Last Name, A to Z.</p></div>
+        <div class="challenge"><p>Filter to show only employees in the Sales department. How many are there?</p></div>
+        <div class="challenge"><p>Find everyone hired in 2023.</p></div>
+        <div class="challenge"><p>Show only employees with a salary over $75,000.</p></div>
+        <div class="challenge"><p>Sort by Department (A to Z), then within each department sort by Salary (largest to smallest).</p></div>
+        <div class="challenge"><p>Use the search box inside the Last Name filter to find every employee whose last name starts with 'S'.</p></div>
+        <div class="challenge"><p>Show only Remote employees in the Engineering department.</p></div>
+        <div class="challenge"><p>Find everyone whose performance rating is 'Exceeds Expectations' AND whose salary is under $90,000.</p></div>
+      </div>
+
+      <div class="download">
+        <h3>Practice File</h3>
+        <p>Sort &amp; Filter Exercise — 60 fictional employees, 8 challenges, full answer key included.</p>
+        <a class="btn" href="Sort_and_Filter_Exercise.xlsx" download>Download Excel File</a>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <span>Chris' Corner · Excel Tip of the Month</span>
+    <span>Last updated <strong>May 2026</strong></span>
+  </footer>
+
+</div>
+
+</body>
+</html>
